@@ -9,6 +9,6 @@ app_name = 'user'
 urlpatterns = [
     path('request_otp/', views.request_otp),
     path('verify_otp/', views.verify_otp),
-    path('test/',views.test),
+    path('get_profile/',views.get_profile),
     path('update_profile/',views.update_profile),
 ]
