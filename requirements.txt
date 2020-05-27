@@ -1,0 +1,10 @@
+asgiref==3.2.7
+cffi==1.14.0
+cryptography==2.9.2
+Django==3.0.6
+pycparser==2.20
+PyJWT==1.7.1
+python-decouple==3.3
+pytz==2020.1
+six==1.15.0
+sqlparse==0.3.1
