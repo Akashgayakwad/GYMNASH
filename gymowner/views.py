@@ -32,6 +32,7 @@ def get_gyms_by_city(request, *args, **kwargs):
                     for gym in gyms:
                         mygym={}
                         mygym['id'] = gym.id
+                        mygym['logo'] = str(gym.logo)
                         mygym['gymname'] = gym.gymname
                         mygym['address'] = gym.address
                         mygym['city'] = str(gym.city)
@@ -57,6 +58,7 @@ def get_gym_details(request, *args, **kwargs):
             mygym['location'] = gym.location
             mygym['city'] = str(gym.city)
             mygym['price'] = gym.price
+            mygym['logo'] = str(gym.logo)
             mygym['images'] = []
             mygym['images'].append(str(gym.image1))
             mygym['images'].append(str(gym.image2))

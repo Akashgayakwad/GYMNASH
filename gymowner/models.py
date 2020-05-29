@@ -18,17 +18,21 @@ class CredUser(AbstractUser):
     REQUIRED_FIELDS = ['email','first_name', 'last_name',]
 
 
-def upload_path_handler(instance, filename):
-    return "gym_images/gym_{id}/{file}".format(id=instance.id, file=filename)
+def upload_logo_handler(instance, filename):
+    return "gym_images/gym_{name}_{city}_{state}/logo/{file}".format(name=instance.gymname,city = str(instance.city), state= str(instance.city.state), file=filename)
+
+def upload_images_handler(instance, filename):
+    return "gym_images/gym_{name}_{city}_{state}/{file}".format(name=instance.gymname,city = str(instance.city), state= str(instance.city.state), file=filename)
 
 class GYM(models.Model):
     gymname = models.CharField(max_length=50)
     gymowner = models.ForeignKey(CredUser,on_delete=models.CASCADE)
-    image1 = models.ImageField(upload_to=upload_path_handler)
-    image2 = models.ImageField(upload_to=upload_path_handler)
-    image3 = models.ImageField(upload_to=upload_path_handler)
-    image4 = models.ImageField(upload_to=upload_path_handler)
-    image5 = models.ImageField(upload_to=upload_path_handler)
+    logo = models.ImageField(upload_to= upload_logo_handler)
+    image1 = models.ImageField(upload_to=upload_images_handler)
+    image2 = models.ImageField(upload_to=upload_images_handler)
+    image3 = models.ImageField(upload_to=upload_images_handler)
+    image4 = models.ImageField(upload_to=upload_images_handler)
+    image5 = models.ImageField(upload_to=upload_images_handler)
     price = models.IntegerField()
     address = models.CharField(max_length=50)
     location = models.CharField(max_length=150)
