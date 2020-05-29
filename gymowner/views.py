@@ -26,7 +26,7 @@ def get_gyms_by_city(request, *args, **kwargs):
             else:
                 print(gyms)
                 if gyms.count() <= 0:
-                    return JsonResponse(status=404,data={"status":"Failed","message":"No Gyms found for the city"})
+                    return JsonResponse({"status":"Failed","message":"No Gyms found for the city"})
                 else:
                     gymlist = []
                     for gym in gyms:
@@ -46,28 +46,32 @@ def get_gyms_by_city(request, *args, **kwargs):
 def get_gym_details(request, *args, **kwargs):
     if request.method=="POST":
         id = request.POST.get('gym_id')
-        gym = GYM.objects.filter(id=id).first()
-        if(gym):
-            mygym={}
-            mygym['id'] = gym.id
-            mygym['gymname'] = gym.gymname
-            mygym['gymowner'] = str(gym.gymowner)
-            mygym['gymownercontact'] = str(gym.gymowner.contact)
-            mygym['gymowneraadhar'] = str(gym.gymowner.aadhar)
-            mygym['address'] = gym.address
-            mygym['location'] = gym.location
-            mygym['city'] = str(gym.city)
-            mygym['price'] = gym.price
-            mygym['logo'] = str(gym.logo)
-            mygym['images'] = []
-            mygym['images'].append(str(gym.image1))
-            mygym['images'].append(str(gym.image2))
-            mygym['images'].append(str(gym.image3))
-            mygym['images'].append(str(gym.image4))
-            mygym['images'].append(str(gym.image5))
-
-
-            return JsonResponse(status=404,data={"status":"Success","message":"Gym found","gym":mygym})
+        try:
+            gym = GYM.objects.filter(id=id).first()
+        except:
+            return JsonResponse(status=500,data={'status':'Failed','message':'Some error occured'})
         else:
-            return JsonResponse(status=404,data={'status':'Failed','message':'Gym Not Found'})
+            if(gym):
+                mygym={}
+                mygym['id'] = gym.id
+                mygym['gymname'] = gym.gymname
+                mygym['gymowner'] = str(gym.gymowner)
+                mygym['gymownercontact'] = str(gym.gymowner.contact)
+                mygym['gymowneraadhar'] = str(gym.gymowner.aadhar)
+                mygym['address'] = gym.address
+                mygym['location'] = gym.location
+                mygym['city'] = str(gym.city)
+                mygym['price'] = gym.price
+                mygym['logo'] = str(gym.logo)
+                mygym['images'] = []
+                mygym['images'].append(str(gym.image1))
+                mygym['images'].append(str(gym.image2))
+                mygym['images'].append(str(gym.image3))
+                mygym['images'].append(str(gym.image4))
+                mygym['images'].append(str(gym.image5))
+
+
+                return JsonResponse(status=404,data={"status":"Success","message":"Gym found","gym":mygym})
+            else:
+                return JsonResponse(status=404,data={'status':'Failed','message':'Gym Not Found'})
 
