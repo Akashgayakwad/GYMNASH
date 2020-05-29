@@ -16,11 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
+app_name = 'gymnash'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/',include('user.urls')),
+    path('api/owner/',include('gymowner.urls')),
     path('api/get_state_list/',views.get_state_list),
     path('api/get_city_list/',views.get_city_list),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
