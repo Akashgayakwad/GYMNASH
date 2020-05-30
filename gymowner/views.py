@@ -26,7 +26,7 @@ def get_gyms_by_city(request, *args, **kwargs):
             else:
                 print(gyms)
                 if gyms.count() <= 0:
-                    return JsonResponse({"status":"Failed","message":"No Gyms found for the city"})
+                    return JsonResponse(status=404,data={"status":"Failed","message":"No Gyms found for the city"})
                 else:
                     gymlist = []
                     for gym in gyms:
@@ -38,7 +38,7 @@ def get_gyms_by_city(request, *args, **kwargs):
                         mygym['city'] = str(gym.city)
                         mygym['price'] = gym.price
                         gymlist.append(mygym)
-                    return JsonResponse(status=404,data={"status":"Success","message":"Gyms found","gyms":gymlist})
+                    return JsonResponse({"status":"Success","message":"Gyms found","gyms":gymlist})
         else:
             return JsonResponse(status=404,data={'status':'Failed','message':'City Not Found'})
 
@@ -71,7 +71,7 @@ def get_gym_details(request, *args, **kwargs):
                 mygym['images'].append(str(gym.image5))
 
 
-                return JsonResponse(status=404,data={"status":"Success","message":"Gym found","gym":mygym})
+                return JsonResponse({"status":"Success","message":"Gym found","gym":mygym})
             else:
                 return JsonResponse(status=404,data={'status':'Failed','message':'Gym Not Found'})
 
