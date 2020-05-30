@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, logout
 from decouple import config
 import json
 import jwt
@@ -9,7 +10,7 @@ from datetime import datetime, date, timedelta
 import pytz
 from user.models import City
 from .models import GYM
-
+from decorators.gym_auth import cred_user
 tz = pytz.timezone('Asia/Kolkata')
 
 
@@ -75,3 +76,52 @@ def get_gym_details(request, *args, **kwargs):
             else:
                 return JsonResponse(status=404,data={'status':'Failed','message':'Gym Not Found'})
 
+@csrf_exempt
+def cred_login(request, *args, **kwargs):
+    error_msg = {}
+    error_msg['success'] = False
+    error_msg['token'] = '' 
+
+    def try_auth(username, password):
+        try:
+            creduser = authenticate(username=username, password=password)
+            if not creduser:
+                print('no gym user')
+                raise ValueError('Invalid login credentials!')
+        except ValueError as e:
+            print('caught invalid cred')
+            error_msg['message'] = str(e)
+        else:
+            print('no error')
+            error_msg['success'] = True
+            error_msg['message'] = "Authentication successful"
+            payload = {
+                'phone': creduser.contact,
+            }
+            jwt_token = jwt.encode(payload, config('SECRET_KEY'))
+            token = jwt_token.decode('utf-8')
+            error_msg['token'] = token
+            error_msg['contact'] = creduser.contact
+   
+    if request.method=='POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(username,password)
+        try_auth(username,password)        
+    else:  
+        error_msg['message'] = "Bad request"
+    return JsonResponse(error_msg)
+
+
+@csrf_exempt
+def cred_logout(request):
+	logout(request)
+	return JsonResponse({'success':True,
+						 'message':'User logged out successsfully'})
+
+                         
+# @csrf_exempt
+# @cred_user
+# def private_route(request, *args, **kwargs):
+#     if request.method == "POST":
+#         return JsonResponse({'message':'You are authorized','cred_user_contact':request.creduser.contact})
