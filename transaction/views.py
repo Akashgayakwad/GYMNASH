@@ -55,34 +55,39 @@ def get_expiry(request, *args, **kwargs):
 @gym_user
 def create_order(request, *args, **kwargs):
     if request.method == 'POST':
-        order_amount = request.POST.get('order_amount')
         gym_id = request.POST.get('gym_id')
-        gym = GYM.objects.filter(id = id).first()
         months = request.POST.get('months')
-        order_currency = 'INR'
-        order_receipt = 'order_rcptid_11'
-        notes = {
-            'customer_number':request.gymuser.phone,
-            'gym_name':gym.gymname,
-            'months':months
-            }
         try:
-            client = razorpay.Client(auth=(config('RZP_KEY'),config('RZP_SECRET')))
-            response = client.order.create(dict(amount = order_amount,
-                                            currency = order_currency,
-                                            receipt = order_receipt,
-                                            notes = notes,
-                                            payment_capture='0'))
+            gym = GYM.objects.filter(id = gym_id).first()
         except:
-            return JsonResponse({'status':'Failed','message':'unable to create order at the moment'})
+            return JsonResponse(status=404,data={'status':'Failed','message':'gym not found'})
         else:
-            order_id = response['id']
-            order_status = response['status']
-            if(order_status == "Created"):
-                order = Order(order_id = order_id, amount = order_amount, months = months,gym=gym, user=request.gymuser)
-                return JsonResponse({'status':'Success','message':'order generated successfully', 'order_id':order_id,'order_status':order_status})
+            order_currency = 'INR'
+            order_receipt = 'order_rcptid_11'
+            notes = {
+                'customer_number':request.gymuser.phone,
+                'gym_name':gym.gymname,
+                'months':months
+                }
+            order_amount = str(gym.price*int(months)*100)
+            try:
+                client = razorpay.Client(auth=(config('RZP_KEY'),config('RZP_SECRET')))
+                response = client.order.create(dict(amount = order_amount,
+                                                currency = order_currency,
+                                                receipt = order_receipt,
+                                                notes = notes,
+                                                payment_capture='0'))
+            except:
+                return JsonResponse({'status':'Failed','message':'unable to create order at the moment'})
             else:
-                return JsonResponse({'status':'Failed','message':'order creation failed by service provider'})
+                order_id = response['id']
+                order_status = response['status']
+                if(order_status == "created"):
+                    order = Order(order_id = order_id, amount = int(order_amount)/100, months = months,gym=gym, user=request.gymuser)
+                    order.save()
+                    return JsonResponse({'status':'Success','message':'order generated successfully', 'order_id':order_id,'order_status':order_status,'order_amount':order_amount,'order_notes':notes})
+                else:
+                    return JsonResponse({'status':'Failed','message':'order creation failed by service provider'})
 
 
 
