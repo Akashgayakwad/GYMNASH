@@ -14,10 +14,10 @@ class Order(models.Model):
     user = models.ForeignKey(GymUser,on_delete=models.CASCADE)
     new = models.BooleanField(default=True)
     order_timestamp = models.DateField(auto_now_add=True)
-    payment_id = models.CharField(null=True,max_length=100)
+    payment_id = models.CharField(null=True,blank=True,max_length=100)
     payment_status = models.CharField(null=True,default="Pending",max_length=50)
-    payment_err_code = models.CharField(null=True,max_length=100)
-    payment_err_msg = models.CharField(null=True,max_length=200)
+    payment_err_code = models.CharField(null=True,blank=True,max_length=100)
+    payment_err_msg = models.CharField(null=True,blank=True,max_length=200)
 
     def __str__(self):
         return str(str(self.user)+"-"+str(self.gym)+"-"+str(self.months)+":"+str(self.amount))

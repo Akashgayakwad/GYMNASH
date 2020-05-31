@@ -76,7 +76,7 @@ def create_order(request, *args, **kwargs):
                                                 currency = order_currency,
                                                 receipt = order_receipt,
                                                 notes = notes,
-                                                payment_capture='0'))
+                                                payment_capture='1'))
             except:
                 return JsonResponse({'status':'Failed','message':'unable to create order at the moment'})
             else:
@@ -92,17 +92,33 @@ def create_order(request, *args, **kwargs):
 
 
 @csrf_exempt
-def payment_status(request, *args, **kwargs):
+def verify_payment(request, *args, **kwargs):
     if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        payment_id = request.POST.get('payment_id')
+        payment_signature = request.POST.get('payment_signature')
+
         params_dict = {
-            'razorpay_payment_id':request.POST.get('razorpay_payment_id'),
-            'razorpay_order_id':request.POST.get('razorpay_order_id'),
-            'razorpay_signature':request.POST.get('razorpay_signature'),
+            'razorpay_payment_id': payment_id,
+            'razorpay_order_id': order_id,
+            'razorpay_signature': payment_signature,
         }
+
         try:
             client = razorpay.Client(auth=(config('RZP_KEY'),config('RZP_SECRET')))
             status = client.utility.verify_payment_signature(params_dict)
+            print(status)
+            order = Order.objects.filter(order_id = order_id).first()
+            order.payment_id = payment_id
+            order.payment_status = "Success"
+            order.save()
         except:
-            return JsonResponse({'status':'Payment Failed'})
+            return JsonResponse({'status': 'Failed','message':'Payment Verification Failed'})
         else:
-            return JsonResponse({'status':'Payment Successful'})
+            return JsonResponse({'status': 'Success','message':'Payment Verified'})
+
+
+# @csrf_exempt
+# def fetch_payments(request,*args, **kwargs):
+#     if request.method == 'POST':
+
