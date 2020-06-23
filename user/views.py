@@ -105,7 +105,7 @@ def verify_otp(request, *args, **kwargs):
                         jwt_token = jwt_token.decode('utf-8')
                         return JsonResponse({"status": "Success", "message":"OTP Matched Successfully","token":jwt_token,"first login":gymuser.first_login})
                 else:
-                    return JsonResponse(status=404,data={'status': 'Failed', 'message':'OTP didnot matched'})
+                    return JsonResponse(status=404,data={'status': 'Failed', 'message':'OTP did not matched'})
             else:
                 return JsonResponse(status=404,data={'status': 'Failed', 'message':'Please request OTP First'})
         else:
@@ -167,3 +167,32 @@ def update_profile(request, *args, **kwargs):
         else:
             return JsonResponse({'status':'Success', 'message':'Profile Updated Successfully'})
         
+
+@csrf_exempt
+@gym_user
+def get_transaction_history(request, *args, **kwargs):
+    if request.method == 'POST':
+        try:
+            transactions = Order.object.filter(user=request.gymuser).order_by('-order_timestamp')
+        except:
+            return JsonResponse(status=500,data={'status':'Failed','message':'Some error occured'})
+        else:
+            if transactions.count() <= 0:
+                return JsonResponse(status=404,data={'status':'Failed','message':'No Transaction Found'})
+            else:
+                transactionlist = []
+                for tsc in transactions:
+                    t = {}
+                    t['booking_id']=tsc.booking_id
+                    t['order_id']=tsc.order_id
+                    t['payment_id']=tsc.payment_id
+                    t['amount']=tsc.amount
+                    t['count']=tsc.count
+                    t['dom']=tsc.dom
+                    t['booking date']=tsc.order_timestamp
+                    t['expiry']=tsc.order_expiry
+                    t['payment_status']=tsc.payment_status
+                    t['payment_err_code']=tsc.payment_err_code
+                    t['payment_err_msg']=tsc.payment_err_msg
+                    transactionlist.append(t)
+                return JsonResponse({'status':'Success','message':'All new Orders fetched', 'orders':transactionlist})

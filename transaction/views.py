@@ -56,7 +56,8 @@ def get_expiry(request, *args, **kwargs):
 def create_order(request, *args, **kwargs):
     if request.method == 'POST':
         gym_id = request.POST.get('gym_id')
-        months = request.POST.get('months')
+        count = request.POST.get('count')
+        dom = request.POST.get('dom')   #daysormonths
         try:
             gym = GYM.objects.filter(id = gym_id).first()
         except:
@@ -67,9 +68,13 @@ def create_order(request, *args, **kwargs):
             notes = {
                 'customer_number':request.gymuser.phone,
                 'gym_name':gym.gymname,
-                'months':months
+                'count':count,
+                'dom':dom
                 }
-            order_amount = str(gym.price*int(months)*100)
+            if dom == 'True':
+                order_amount = str(gym.daily_price*int(count)*100)
+            else:
+                order_amount = str(gym.monthly_price*int(count)*100)
             try:
                 client = razorpay.Client(auth=(config('RZP_KEY'),config('RZP_SECRET')))
                 response = client.order.create(dict(amount = order_amount,
@@ -83,7 +88,12 @@ def create_order(request, *args, **kwargs):
                 order_id = response['id']
                 order_status = response['status']
                 if(order_status == "created"):
-                    order = Order(order_id = order_id, amount = int(order_amount)/100, months = months,gym=gym, user=request.gymuser)
+                    if dom == 'True':
+                        expiry  = date.today() + timedelta(days = count)
+                    else:
+                        expiry  = date.today() + timedelta(days = count*30)
+
+                    order = Order(order_id = order_id, amount = int(order_amount)/100, count = count ,dom=bool(dom), gym=gym, user=request.gymuser,order_expiry=expiry)
                     order.save()
                     return JsonResponse({'status':'Success','message':'order generated successfully', 'order_id':order_id,'order_status':order_status,'order_amount':order_amount,'order_notes':notes})
                 else:
@@ -92,7 +102,7 @@ def create_order(request, *args, **kwargs):
 
 
 @csrf_exempt
-def verify_payment(request, *args, **kwargs):
+def confirm_payment(request, *args, **kwargs):
     if request.method == 'POST':
         order_id = request.POST.get('order_id')
         payment_id = request.POST.get('payment_id')
@@ -112,13 +122,28 @@ def verify_payment(request, *args, **kwargs):
             order.payment_id = payment_id
             order.payment_status = "Success"
             order.save()
-        except:
-            return JsonResponse({'status': 'Failed','message':'Payment Verification Failed'})
+        except SignatureVerificationError as err:
+            return JsonResponse({'status': 'Failed','message':'Payment Verification Failed. Error is'+err})
         else:
             return JsonResponse({'status': 'Success','message':'Payment Verified'})
 
 
-# @csrf_exempt
-# def fetch_payments(request,*args, **kwargs):
-#     if request.method == 'POST':
+@csrf_exempt
+def payment_failure(request, *args, **kwargs):
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        payment_id = request.POST.get('payment_id')
+        payment_err_code = request.POST.get('payment_error_code')
+        payment_error_msg = request.POST.get('payment_error_msg')
 
+        try:
+            order = Order.objects.filter(order_id = order_id).first()
+            order.payment_id = payment_id
+            order.payment_status = "Falied"
+            order.payment_err_code=payment_err_code
+            order.payment_err_msg=payment_err_msg
+            order.save()
+        except:
+            return JsonResponse({'status': 'Failed','message':'Payment Status Update Failed'})
+        else:
+            return JsonResponse({'status': 'Success','message':'Payment Status Updated'})
