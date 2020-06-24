@@ -89,9 +89,9 @@ def create_order(request, *args, **kwargs):
                 order_status = response['status']
                 if(order_status == "created"):
                     if dom == 'True':
-                        expiry  = date.today() + timedelta(days = count)
+                        expiry  = date.today() + timedelta(days = int(count))
                     else:
-                        expiry  = date.today() + timedelta(days = count*30)
+                        expiry  = date.today() + timedelta(days = int(count)*30)
 
                     order = Order(order_id = order_id, amount = int(order_amount)/100, count = count ,dom=bool(dom), gym=gym, user=request.gymuser,order_expiry=expiry)
                     order.save()

@@ -12,4 +12,4 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm):
         model = CredUser
-        fields = ('first_name','last_name','contact','gymowner')
+        fields = ('first_name','last_name','password','contact','gymowner')
