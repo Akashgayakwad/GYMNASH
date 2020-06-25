@@ -154,7 +154,7 @@ def get_all_orders(request, *args, **kwargs):
     if request.method == 'POST':
         gym_id = request.POST.get('gym_id')
         try:
-            gym = GYM.object.filter(id=gym_id, gymowner=request.creduser).first()
+            gym = GYM.objects.filter(id=gym_id, gymowner=request.creduser).first()
         except:
             return JsonResponse(status=500,data={'status':'Failed','message':'Some error occured'})
         else:
@@ -170,9 +170,9 @@ def get_all_orders(request, *args, **kwargs):
                         myorder['booking_id']=order.booking_id
                         myorder['customer_name']=str(order.user)
                         myorder['new']=order.new
-                        order['order_time']=order.order_timestamp
-                        order['expiry']=order.expiry
-                        orderlist.append(order)
+                        myorder['order_time']=order.order_timestamp
+                        myorder['expiry']=order.order_expiry
+                        orderlist.append(myorder)
                     return JsonResponse({'status':'Success','message':'All Orders fetched', 'orders':orderlist})
 
                         
@@ -187,7 +187,7 @@ def get_new_orders(request, *args, **kwargs):
     if request.method == 'POST':
         gym_id = request.POST.get('gym_id')
         try:
-            gym = GYM.object.filter(id=gym_id, gymowner=request.creduser).first()
+            gym = GYM.objects.filter(id=gym_id, gymowner=request.creduser).first()
         except:
             return JsonResponse(status=500,data={'status':'Failed','message':'Some error occured'})
         else:
@@ -203,9 +203,9 @@ def get_new_orders(request, *args, **kwargs):
                         myorder['booking_id']=order.booking_id
                         myorder['customer_name']=str(order.user)
                         myorder['new']=order.new
-                        order['order_time']=order.order_timestamp
-                        order['expiry']=order.expiry
-                        orderlist.append(order)
+                        myorder['order_time']=order.order_timestamp
+                        myorder['expiry']=order.order_expiry
+                        orderlist.append(myorder)
                     return JsonResponse({'status':'Success','message':'All new Orders fetched', 'orders':orderlist})
 
                         

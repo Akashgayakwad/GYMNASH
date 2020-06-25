@@ -9,6 +9,7 @@ from datetime import datetime, date, timedelta
 import pytz
 
 from .models import GymUser,OTP,City,State
+from transaction.models import Order
 from decorators.gym_auth import gym_user
 
 tz = pytz.timezone('Asia/Kolkata')
@@ -173,7 +174,8 @@ def update_profile(request, *args, **kwargs):
 def get_transaction_history(request, *args, **kwargs):
     if request.method == 'POST':
         try:
-            transactions = Order.object.filter(user=request.gymuser).order_by('-order_timestamp')
+            print(request.gymuser)
+            transactions = Order.objects.filter(user=request.gymuser).order_by('-order_timestamp','-booking_id')
         except:
             return JsonResponse(status=500,data={'status':'Failed','message':'Some error occured'})
         else:
@@ -189,6 +191,7 @@ def get_transaction_history(request, *args, **kwargs):
                     t['amount']=tsc.amount
                     t['count']=tsc.count
                     t['dom']=tsc.dom
+                    t['gym']=str(tsc.gym.gymname)
                     t['booking date']=tsc.order_timestamp
                     t['expiry']=tsc.order_expiry
                     t['payment_status']=tsc.payment_status

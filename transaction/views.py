@@ -123,7 +123,7 @@ def confirm_payment(request, *args, **kwargs):
             order.payment_status = "Success"
             order.save()
         except SignatureVerificationError as err:
-            return JsonResponse({'status': 'Failed','message':'Payment Verification Failed. Error is'+err})
+            return JsonResponse(status=500,data={'status': 'Failed','message':'Payment Verification Failed. Error is'+err})
         else:
             return JsonResponse({'status': 'Success','message':'Payment Verified'})
 
