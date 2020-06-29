@@ -14,7 +14,7 @@ tz = pytz.timezone('Asia/Kolkata')
 
 
 @csrf_exempt
-def add_subscribers(request, *args, **kwargs):
+def add_subscriber(request, *args, **kwargs):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')

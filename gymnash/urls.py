@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/user/',include('user.urls')),
     path('api/owner/',include('gymowner.urls')),
     path('api/transaction/',include('transaction.urls')),
+    path('api/newsletter/',include('newsletter.urls')),
     path('api/get_state_list/',views.get_state_list),
     path('api/get_city_list/',views.get_city_list),
 ]

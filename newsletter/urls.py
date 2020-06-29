@@ -7,4 +7,5 @@ from . import views
 app_name = 'user'
 
 urlpatterns = [
-    path('add_subscribers/', views.add_subscribers),
+    path('add_subscriber/', views.add_subscriber)
+]
