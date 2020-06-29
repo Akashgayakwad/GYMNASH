@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user',
     'gymowner',
-    'transaction'
+    'transaction',
+    'newsletter'
 ]
 
 MIDDLEWARE = [

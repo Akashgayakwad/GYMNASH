@@ -160,7 +160,7 @@ def get_all_orders(request, *args, **kwargs):
         else:
             if(gym):
                 try:
-                    orders = Order.objects.filter(payment_status="Success",gym=gym).order_by('-order_timestamp')
+                    orders = Order.objects.filter(payment_status="Success",gym=gym).order_by('-order_timestamp','-booking_id')
                 except:
                     return JsonResponse(status=500,data={'status':'Failed','message':'unable to fetch orders at the moment'})
                 else:
@@ -193,7 +193,7 @@ def get_new_orders(request, *args, **kwargs):
         else:
             if(gym):
                 try:
-                    orders = Order.objects.filter(new=True, payment_status="Success",gym=gym).order_by('-order_timestamp')
+                    orders = Order.objects.filter(new=True, payment_status="Success",gym=gym).order_by('-order_timestamp','-booking_id')
                 except:
                     return JsonResponse(status=500,data={'status':'Failed','message':'unable to fetch orders at the moment'})
                 else:

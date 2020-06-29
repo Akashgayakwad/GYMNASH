@@ -119,15 +119,19 @@ def verify_otp(request, *args, **kwargs):
 def get_profile(request, *args, **kwargs):
     if request.method=='GET':
         if(request.gymuser.first_login):
-            return JsonResponse(status=404,data={"status":"Success","message":"Profile details not available"})
-        return JsonResponse({'u_id':request.gymuser.u_id,
-                            'fname':request.gymuser.fname,
-                            'lname':request.gymuser.lname,
-                            'email':request.gymuser.email,
-                            'dob':request.gymuser.dob,
-                            'sex':request.gymuser.sex,
-                            'city':str(request.gymuser.city),
-                            'first_login':request.gymuser.first_login})
+            return JsonResponse(status=200,data={"status":"Success","message":"Profile details not available"})
+        return JsonResponse({"status":"Success",
+                            'message':'Profile details fetched successfully',
+                            'data':{'u_id':request.gymuser.u_id,
+                                    'fname':request.gymuser.fname,
+                                    'lname':request.gymuser.lname,
+                                    'email':request.gymuser.email,
+                                    'dob':request.gymuser.dob,
+                                    'sex':request.gymuser.sex,
+                                    'city':str(request.gymuser.city),
+                                    'first_login':request.gymuser.first_login
+                                    }
+                            })
 
 
 
