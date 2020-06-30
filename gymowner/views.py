@@ -76,6 +76,7 @@ def get_gyms_by_city(request, *args, **kwargs):
                         mygym['gymname'] = gym.gymname
                         mygym['address'] = gym.address
                         mygym['city'] = str(gym.city)
+                        mygym['original_price'] = gym.original_price
                         mygym['daily_price'] = gym.daily_price
                         mygym['monthly_price'] = gym.monthly_price
                         gymlist.append(mygym)
@@ -105,6 +106,7 @@ def get_gyms_by_owner(request, *args, **kwargs):
                     mygym['gymname'] = gym.gymname
                     mygym['address'] = gym.address
                     mygym['city'] = str(gym.city)
+                    mygym['original_price'] = gym.original_price
                     mygym['daily_price'] = gym.daily_price
                     mygym['monthly_price'] = gym.monthly_price
                     gymlist.append(mygym)
@@ -125,11 +127,17 @@ def get_gym_details(request, *args, **kwargs):
                 mygym['id'] = gym.id
                 mygym['gymname'] = gym.gymname
                 mygym['gymowner'] = str(gym.gymowner)
+                mygym['feature1'] = gym.feature1
+                mygym['feature2'] = gym.feature2
+                mygym['feature3'] = gym.feature3
+                mygym['feature4'] = gym.feature4
+                mygym['feature5'] = gym.feature5
                 mygym['gymownercontact'] = str(gym.gymowner.contact)
                 mygym['gymowneraadhar'] = str(gym.gymowner.aadhar)
                 mygym['address'] = gym.address
                 mygym['location'] = gym.location
                 mygym['city'] = str(gym.city)
+                mygym['original_price'] = gym.original_price
                 mygym['daily_price'] = gym.daily_price
                 mygym['monthly_price'] = gym.monthly_price
                 mygym['logo'] = str(gym.logo)

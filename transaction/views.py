@@ -50,6 +50,11 @@ def get_expiry(request, *args, **kwargs):
             else:
                 return JsonResponse(status=404,data={'success':'Failed','message':'order with given booking id not found'})
 
+def my_bool(mystr):
+    if mystr == "True":
+        return True
+    else:
+        return False
 
 @csrf_exempt
 @gym_user
@@ -92,8 +97,7 @@ def create_order(request, *args, **kwargs):
                         expiry  = date.today() + timedelta(days = int(count))
                     else:
                         expiry  = date.today() + timedelta(days = int(count)*30)
-
-                    order = Order(order_id = order_id, amount = int(order_amount)/100, count = count ,dom=bool(dom), gym=gym, user=request.gymuser,order_expiry=expiry)
+                    order = Order(order_id = order_id, amount = int(order_amount)/100, count = count ,dom=my_bool(dom), gym=gym, user=request.gymuser,order_expiry=expiry)
                     order.save()
                     return JsonResponse({'status':'Success','message':'order generated successfully', 'order_id':order_id,'order_status':order_status,'order_amount':order_amount,'order_notes':notes})
                 else:

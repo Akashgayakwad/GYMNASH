@@ -11,17 +11,17 @@ def gym_user(function):
             try:
                 payload = jwt.decode(token,config('SECRET_KEY'))
             except:
-                return JsonResponse({'Success':'False','message':'incorrect token'})
+                return JsonResponse({'status':'Failed','message':'incorrect token'})
             else:
                 phone = payload['phone']
                 try:
                     gymuser = GymUser.objects.filter(phone = phone).first()
                 except:
-                    return JsonResponse({'Success':'False','message':'User account not found'})
+                    return JsonResponse({'status':'Failed','message':'User account not found'})
                 else:
                     request.gymuser = gymuser
         else:
-            return JsonResponse({'Success':'False','message':'No Token Provided'})
+            return JsonResponse({'status':'Failed','message':'No Token Provided'})
 
         return function(request, *args, **kwargs)
     wrap.__doc__ = function.__doc__
@@ -36,17 +36,17 @@ def cred_user(function):
             try:
                 payload = jwt.decode(token,config('SECRET_KEY'))
             except:
-                return JsonResponse({'Success':'False','message':'incorrect token'})
+                return JsonResponse({'status':'Failed','message':'incorrect token'})
             else:
                 username = payload['username']
                 try:
                     creduser = CredUser.objects.filter(username = username).first()
                 except:
-                    return JsonResponse({'Success':'False','message':'CredUser account not found'})
+                    return JsonResponse({'status':'Failed','message':'CredUser account not found'})
                 else:
                     request.creduser = creduser
         else:
-            return JsonResponse({'Success':'False','message':'No Token Provided'})
+            return JsonResponse({'status':'Failed','message':'No Token Provided'})
 
         return function(request, *args, **kwargs)
     wrap.__doc__ = function.__doc__

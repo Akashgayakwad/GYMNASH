@@ -104,7 +104,7 @@ def verify_otp(request, *args, **kwargs):
                         payload = {'phone':str(phone),}
                         jwt_token = jwt.encode(payload, config('SECRET_KEY'))
                         jwt_token = jwt_token.decode('utf-8')
-                        return JsonResponse({"status": "Success", "message":"OTP Matched Successfully","token":jwt_token,"first login":gymuser.first_login})
+                        return JsonResponse({"status": "Success", "message":"OTP Matched Successfully","token":jwt_token,"first login":gymuser.first_login,"City":str(gymuser.city)})
                 else:
                     return JsonResponse(status=404,data={'status': 'Failed', 'message':'OTP did not matched'})
             else:
