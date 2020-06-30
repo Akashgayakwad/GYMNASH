@@ -11,6 +11,26 @@ import pytz
 from .models import GymUser,OTP,City,State
 from transaction.models import Order
 from decorators.gym_auth import gym_user
+import requests
+
+def send_otp_sms(phone , otp):
+    url = 'http://sms1.codenicely.in/api/sendhttp.php?'
+    params = {
+    "authkey":"238837A7MVgzyG6Svd5ba4def9",
+    "mobiles":int(phone),
+    "message":"Your one time password is " + str(otp) + ". Please use this One Time Password(OTP) within the next two minutes to proceed.\nThank you!,\nTeam Gymnash.",
+    "sender":"GYMNAS",
+    "route":4,
+    "country":"+91",
+    "response":"json",
+    "campaign":"GYMNASH"
+    }
+    r = requests.get(url,params=params)
+    print(r.status_code)
+    r = r.json()
+    print(r)
+    print("equal",(r["type"]=="error"))
+    return r["type"]
 
 tz = pytz.timezone('Asia/Kolkata')
 
@@ -37,6 +57,9 @@ def request_otp(request, *args, **kwargs):
                     else:
                         print("expired otp replaced with new otp")
                         print("count = ",pstotp.count)
+                        if send_otp_sms(phone, pstotp.otp) == "error":
+                            return JsonResponse({'status':'Failed','message':'Could not send sms'})
+                        
                         return JsonResponse({'status': 'Success', 'message':'New OTP Regenerated','otp':pstotp.otp})
                
                 count = pstotp.count
@@ -47,6 +70,9 @@ def request_otp(request, *args, **kwargs):
                     except:
                         return JsonResponse(status=500, data={'status': 'Failed', 'message':'Unable to generate OTP'})
                     else:
+                        if send_otp_sms(phone, pstotp.otp) == "error":
+                            return JsonResponse({'status':'Failed','message':'Could not send sms'})
+
                         return JsonResponse({'status': 'Success', 'message':'OTP Already exist','otp':pstotp.otp})
                 else:
                     return JsonResponse(status=403, data={'status': 'Failed', 'message':'OTP Limit Exceeded! Contact Customer Service'})
@@ -60,6 +86,9 @@ def request_otp(request, *args, **kwargs):
                     return JsonResponse(status=500, data={'status': 'Failed', 'message':'Unable to generate OTP'})
                 else:
                     print("count = ",otp.count)
+                    if send_otp_sms(phone, pstotp.otp) == "error":
+                            return JsonResponse({'status':'Failed','message':'Could not send sms'})
+
                     return JsonResponse({'status': 'Success', 'message':'OTP generated Successfully','otp':pin})
         
         else:
@@ -73,6 +102,9 @@ def request_otp(request, *args, **kwargs):
                 return JsonResponse(status=500, data={'status': 'Failed', 'message':'Unable to generate OTP'})
             else:
                 print("count = ",otp.count)
+                if send_otp_sms(phone, pstotp.otp) == "error":
+                            return JsonResponse({'status':'Failed','message':'Could not send sms'})
+
                 return JsonResponse({'status': 'Success', 'message':'OTP Sent Successfully','otp':pin})
 
 
