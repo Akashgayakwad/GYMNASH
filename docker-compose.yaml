@@ -1,0 +1,36 @@
+version: '3'
+    
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: gymnash
+      POSTGRES_USER: gymnash
+      POSTGRES_PASSWORD: gymnash
+    expose: 
+        - "5432"
+    volumes:
+        - database-data:/var/lib/postgresql/data/
+  web:
+    build: .
+    restart: always
+    command: bash run_prod.sh
+    volumes:
+      - .:/code
+    expose:
+      - "9000"
+    depends_on:
+    - db
+  nginx:
+    build: ./nginx/
+    restart: always
+    volumes:
+      - .:/code
+    ports:
+    - "80:80"
+    depends_on:
+      - db
+      - web
+volumes: 
+  database-data:

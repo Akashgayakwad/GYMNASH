@@ -27,6 +27,7 @@ def send_otp_sms(phone , otp):
     }
     r = requests.get(url,params=params)
     print(r.status_code)
+    print(r)
     print(r.status_code == 200)
     if(r.status_code == 200):
         r = r.json()
