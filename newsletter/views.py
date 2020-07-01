@@ -25,4 +25,8 @@ def add_subscriber(request, *args, **kwargs):
             return JsonResponse(status=500,data={'status': 'Failed', 'message':'Internal Server Error'})
         else:
             return JsonResponse({'status':'Success', 'message':'Newsletter Subscriber added successfully'})
+
+@csrf_exempt
+def mock(request,*args,**kwargs):
+    return JsonResponse({'sad':'asfasf'})
         
