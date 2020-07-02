@@ -3,8 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from user.models import City
 
 class CredUser(AbstractUser):
-    contact = models.IntegerField(null=True)
-    aadhar = models.IntegerField(null=True)
+    contact = models.BigIntegerField(null=True)
+    aadhar = models.BigIntegerField(null=True)
     gymowner = models.BooleanField(default=False)
 
 
