@@ -145,7 +145,7 @@ def payment_failure(request, *args, **kwargs):
             order.payment_id = payment_id
             order.payment_status = "Falied"
             order.payment_err_code=payment_err_code
-            order.payment_err_msg=payment_err_msg
+            order.payment_err_msg=payment_error_msg
             order.save()
         except Exception as e:
             return JsonResponse({'status': 'Failed','message':'Payment Status Update Failed','error':str(e)})
