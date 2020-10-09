@@ -79,7 +79,23 @@ def create_order(request, *args, **kwargs):
             if dom == 'True':
                 order_amount = str(gym.daily_price*int(count)*100)
             else:
-                order_amount = str(gym.monthly_price*int(count)*100)
+                gym_prices = [gym.monthly_price,
+                             gym.two_monthly_price, 
+                             gym.three_monthly_price,
+                             gym.four_monthly_price,
+                             gym.five_monthly_price,
+                             gym.six_monthly_price,
+                             gym.seven_monthly_price,
+                             gym.eight_monthly_price,
+                             gym.nine_monthly_price,
+                             gym.ten_monthly_price,
+                             gym.eleven_monthly_price,
+                             gym.twelve_monthly_price
+                             ]
+                if int(count)<=12:
+                    order_amount = str(gym_prices[int(count)-1]*100)
+                else:
+                    order_amount = str(gym.monthly_price*int(count)*100)
             try:
                 client = razorpay.Client(auth=(config('RZP_KEY'),config('RZP_SECRET')))
                 response = client.order.create(dict(amount = order_amount,

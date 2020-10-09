@@ -79,6 +79,18 @@ def get_gyms_by_city(request, *args, **kwargs):
                         mygym['original_price'] = gym.original_price
                         mygym['daily_price'] = gym.daily_price
                         mygym['monthly_price'] = gym.monthly_price
+                        mygym['two_monthly_price'] = gym.two_monthly_price
+                        mygym['three_monthly_price'] = gym.three_monthly_price
+                        mygym['four_monthly_price'] = gym.four_monthly_price
+                        mygym['five_monthly_price'] = gym.five_monthly_price
+                        mygym['six_monthly_price'] = gym.six_monthly_price
+                        mygym['seven_monthly_price'] = gym.seven_monthly_price
+                        mygym['eight_monthly_price'] = gym.eight_monthly_price
+                        mygym['nine_monthly_price'] = gym.nine_monthly_price
+                        mygym['ten_monthly_price'] = gym.ten_monthly_price
+                        mygym['eleven_monthly_price'] = gym.eleven_monthly_price
+                        mygym['twelve_monthly_price'] = gym.twelve_monthly_price
+
                         gymlist.append(mygym)
                     return JsonResponse({"status":"Success","message":"Gyms found","gyms":gymlist})
         else:
@@ -109,6 +121,17 @@ def get_gyms_by_owner(request, *args, **kwargs):
                     mygym['original_price'] = gym.original_price
                     mygym['daily_price'] = gym.daily_price
                     mygym['monthly_price'] = gym.monthly_price
+                    mygym['two_monthly_price'] = gym.two_monthly_price
+                    mygym['three_monthly_price'] = gym.three_monthly_price
+                    mygym['four_monthly_price'] = gym.four_monthly_price
+                    mygym['five_monthly_price'] = gym.five_monthly_price
+                    mygym['six_monthly_price'] = gym.six_monthly_price
+                    mygym['seven_monthly_price'] = gym.seven_monthly_price
+                    mygym['eight_monthly_price'] = gym.eight_monthly_price
+                    mygym['nine_monthly_price'] = gym.nine_monthly_price
+                    mygym['ten_monthly_price'] = gym.ten_monthly_price
+                    mygym['eleven_monthly_price'] = gym.eleven_monthly_price
+                    mygym['twelve_monthly_price'] = gym.twelve_monthly_price
                     gymlist.append(mygym)
                 return JsonResponse({"status":"Success","message":"Gyms found","gyms":gymlist})
 
@@ -140,6 +163,17 @@ def get_gym_details(request, *args, **kwargs):
                 mygym['original_price'] = gym.original_price
                 mygym['daily_price'] = gym.daily_price
                 mygym['monthly_price'] = gym.monthly_price
+                mygym['two_monthly_price'] = gym.two_monthly_price
+                mygym['three_monthly_price'] = gym.three_monthly_price
+                mygym['four_monthly_price'] = gym.four_monthly_price
+                mygym['five_monthly_price'] = gym.five_monthly_price
+                mygym['six_monthly_price'] = gym.six_monthly_price
+                mygym['seven_monthly_price'] = gym.seven_monthly_price
+                mygym['eight_monthly_price'] = gym.eight_monthly_price
+                mygym['nine_monthly_price'] = gym.nine_monthly_price
+                mygym['ten_monthly_price'] = gym.ten_monthly_price
+                mygym['eleven_monthly_price'] = gym.eleven_monthly_price
+                mygym['twelve_monthly_price'] = gym.twelve_monthly_price
                 mygym['logo'] = str(gym.logo)
                 mygym['images'] = []
                 mygym['images'].append(str(gym.image1))

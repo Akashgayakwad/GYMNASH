@@ -41,6 +41,17 @@ class GYM(models.Model):
     original_price = models.IntegerField()
     daily_price = models.IntegerField()
     monthly_price = models.IntegerField()
+    two_monthly_price = models.IntegerField(default = -1)
+    three_monthly_price= models.IntegerField(default = -1)
+    four_monthly_price = models.IntegerField(default = -1)
+    five_monthly_price = models.IntegerField(default = -1)
+    six_monthly_price = models.IntegerField(default = -1)
+    seven_monthly_price = models.IntegerField(default = -1)
+    eight_monthly_price = models.IntegerField(default = -1)
+    nine_monthly_price = models.IntegerField(default = -1)
+    ten_monthly_price = models.IntegerField(default = -1)
+    eleven_monthly_price = models.IntegerField(default = -1)
+    twelve_monthly_price = models.IntegerField(default = -1)
     address = models.CharField(max_length=50)
     location = models.CharField(max_length=150)
     city = models.ForeignKey(City,on_delete=models.CASCADE)
@@ -48,3 +59,27 @@ class GYM(models.Model):
     def __str__(self):
         return str(self.gymname + ": " +str(self.city))
 
+    def save(self, *args, **kwargs):
+        if self.two_monthly_price == -1:
+            self.two_monthly_price = self.monthly_price*2
+        if self.three_monthly_price == -1:
+            self.three_monthly_price = self.monthly_price*3
+        if self.four_monthly_price == -1:
+            self.four_monthly_price = self.monthly_price*4
+        if self.five_monthly_price == -1:
+            self.five_monthly_price = self.monthly_price*5
+        if self.six_monthly_price == -1:
+            self.six_monthly_price = self.monthly_price*6
+        if self.seven_monthly_price == -1:
+            self.seven_monthly_price = self.monthly_price*7
+        if self.eight_monthly_price == -1:
+            self.eight_monthly_price = self.monthly_price*8
+        if self.nine_monthly_price == -1:
+            self.nine_monthly_price = self.monthly_price*9
+        if self.ten_monthly_price == -1:
+            self.ten_monthly_price = self.monthly_price*10
+        if self.eleven_monthly_price == -1:
+            self.eleven_monthly_price = self.monthly_price*11
+        if self.twelve_monthly_price == -1:
+            self.twelve_monthly_price =self.monthly_price*12
+        super().save(*args, **kwargs)
