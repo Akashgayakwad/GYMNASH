@@ -10,7 +10,7 @@ idna==2.9
 Pillow==7.1.2
 psycopg2==2.8.5
 pycparser==2.20
-PyJWT==1.7.1
+PyJWT==2.4.0
 python-decouple==3.3
 pytz==2020.1
 razorpay==1.2.0
